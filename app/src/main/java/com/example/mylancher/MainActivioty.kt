@@ -1,7 +1,6 @@
 package com.example.mylauncher
 
 import android.content.Intent
-import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,19 +23,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 1. レイアウトファイル（activity_main.xml）を画面にセット
         setContentView(R.layout.activity_main)
 
-        // 2. 画面上の RecyclerView を取得
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
 
-        // ★【Xperia風ポイント】リストを横4列のグリッド（マス目）に設定
+        // 横4列のグリッド（マス目）に設定
         recyclerView.layoutManager = GridLayoutManager(this, 4)
 
-        // 3. アプリ一覧を取得してグリッドにセット
         val appsList = getInstalledApps()
         recyclerView.adapter = AppAdapter(appsList) { packageName ->
-            // タップされたアプリを起動
             val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
             if (launchIntent != null) {
                 startActivity(launchIntent)
@@ -44,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // インストール済みアプリの一覧とアイコンを取得する処理
     private fun getInstalledApps(): List<AppInfo> {
         val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
@@ -60,10 +54,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ホームアプリのため「戻るボタン」を無効化
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        // 何もしない
+        // ホームアプリのため戻るボタンを無効化
     }
 }
 
@@ -94,11 +87,4 @@ class AppAdapter(
     }
 
     override fun getItemCount(): Int = appList.size
-}
-
-    // ホームアプリなので「戻るボタン」を押してもアプリが閉じないように無効化する
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        // 何もしない
-    }
 }
